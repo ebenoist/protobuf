@@ -161,7 +161,10 @@ VALUE Message_method_missing(int argc, VALUE* argv, VALUE _self) {
   // See if this name corresponds to either a oneof or field in this message.
   if (!upb_msgdef_lookupname(self->descriptor->msgdef, name, name_len, &f,
                              &o)) {
-    return rb_call_super(argc, argv);
+
+    /* return rb_funcallv(rb_mKernel, rb_intern("sprintf"), 4, rb_str_new2("%s%s%s"), rb_str_new2("var is "), LONG2NUM(42), rb_str_new2(". So there.")); */
+
+    return rb_funcallv(rb_mKernel, SYM2ID(method_name), argc, argv);
   }
 
   if (o != NULL) {
@@ -535,7 +538,7 @@ VALUE build_class_from_descriptor(Descriptor* desc) {
       // Docs say this parameter is ignored. User will assign return value to
       // their own toplevel constant class name.
       rb_intern("Message"),
-      rb_cObject);
+      rb_cBasicObject);
   rb_ivar_set(klass, descriptor_instancevar_interned,
               get_def_obj(desc->msgdef));
   rb_define_alloc_func(klass, Message_alloc);

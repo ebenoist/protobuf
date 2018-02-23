@@ -22,6 +22,12 @@ module BasicTest
       optional :msg, :string, 1
     end
 
+    add_message "TestMessageWithKernelMethods" do
+      optional :display, :string, 1
+      optional :trust, :bool, 2
+      optional :method, :string, 3
+    end
+
     add_message "TestMessage" do
       optional :optional_int32,  :int32,        1
       optional :optional_int64,  :int64,        2
@@ -123,6 +129,7 @@ module BasicTest
   Bar = pool.lookup("Bar").msgclass
   Baz = pool.lookup("Baz").msgclass
   TestMessage = pool.lookup("TestMessage").msgclass
+  TestMessageWithKernelMethods = pool.lookup("TestMessageWithKernelMethods").msgclass
   TestMessage2 = pool.lookup("TestMessage2").msgclass
   TestEmbeddedMessageParent = pool.lookup("TestEmbeddedMessageParent").msgclass
   TestEmbeddedMessageChild = pool.lookup("TestEmbeddedMessageChild").msgclass
@@ -186,6 +193,17 @@ module BasicTest
       assert m.optional_enum == :C
       m.optional_enum = 'C'
       assert m.optional_enum == :C
+    end
+
+    def test_reserved_object_methods
+      m = TestMessageWithKernelMethods.new
+      m.display = 'display'
+      m.trust = true
+      m.method = 'GET'
+
+      assert m.display == 'display'
+      assert m.trust == true
+      assert m.method == 'GET'
     end
 
     def test_ctor_args
